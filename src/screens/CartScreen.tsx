@@ -7,28 +7,24 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
-import {useStore} from '../store/store';
-import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
-import {COLORS, SPACING} from '../theme/theme';
+import { useStore } from '../store/store';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { COLORS, SPACING } from '../theme/theme';
 import HeaderBar from '../components/HeaderBar';
 import EmptyListAnimation from '../components/EmptyListAnimation';
 import PaymentFooter from '../components/PaymentFooter';
 import CartItem from '../components/CartItem';
 
-const CartScreen = ({navigation, route}: any) => {
+const CartScreen = ({ navigation, route }: any) => {
   const CartList = useStore((state: any) => state.CartList);
   const CartPrice = useStore((state: any) => state.CartPrice);
-  const incrementCartItemQuantity = useStore(
-    (state: any) => state.incrementCartItemQuantity,
-  );
-  const decrementCartItemQuantity = useStore(
-    (state: any) => state.decrementCartItemQuantity,
-  );
+  const incrementCartItemQuantity = useStore((state: any) => state.incrementCartItemQuantity);
+  const decrementCartItemQuantity = useStore((state: any) => state.decrementCartItemQuantity);
   const calculateCartPrice = useStore((state: any) => state.calculateCartPrice);
   const tabBarHeight = useBottomTabBarHeight();
 
   const buttonPressHandler = () => {
-    navigation.push('Payment', {amount: CartPrice});
+    navigation.push('Payment', { amount: CartPrice });
   };
 
   const incrementCartItemQuantityHandler = (id: string, size: string) => {
@@ -40,22 +36,22 @@ const CartScreen = ({navigation, route}: any) => {
     decrementCartItemQuantity(id, size);
     calculateCartPrice();
   };
+
   return (
-    <View style={styles.ScreenContainer}>
+    <View style={styles.screenContainer}>
       <StatusBar backgroundColor={COLORS.primaryBlackHex} />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.ScrollViewFlex}>
-        <View
-          style={[styles.ScrollViewInnerView, {marginBottom: tabBarHeight}]}>
-          <View style={styles.ItemContainer}>
+        contentContainerStyle={styles.scrollViewFlex}>
+        <View style={[styles.scrollViewInnerView, { marginBottom: tabBarHeight }]}>
+          <View style={styles.itemContainer}>
             <HeaderBar title="Cart" />
 
-            {CartList.length == 0 ? (
-              <EmptyListAnimation title={'Cart is Empty'} />
+            {CartList.length === 0 ? (
+              <EmptyListAnimation title="Cart is Empty" />
             ) : (
-              <View style={styles.ListItemContainer}>
+              <View style={styles.listItemContainer}>
                 {CartList.map((data: any) => (
                   <TouchableOpacity
                     onPress={() => {
@@ -74,12 +70,8 @@ const CartScreen = ({navigation, route}: any) => {
                       roasted={data.roasted}
                       prices={data.prices}
                       type={data.type}
-                      incrementCartItemQuantityHandler={
-                        incrementCartItemQuantityHandler
-                      }
-                      decrementCartItemQuantityHandler={
-                        decrementCartItemQuantityHandler
-                      }
+                      incrementCartItemQuantityHandler={incrementCartItemQuantityHandler}
+                      decrementCartItemQuantityHandler={decrementCartItemQuantityHandler}
                     />
                   </TouchableOpacity>
                 ))}
@@ -87,14 +79,12 @@ const CartScreen = ({navigation, route}: any) => {
             )}
           </View>
 
-          {CartList.length != 0 ? (
+          {CartList.length !== 0 && (
             <PaymentFooter
               buttonPressHandler={buttonPressHandler}
               buttonTitle="Pay"
-              price={{price: CartPrice, currency: '$'}}
+              price={{ price: CartPrice, currency: '$' }}
             />
-          ) : (
-            <></>
           )}
         </View>
       </ScrollView>
@@ -103,23 +93,23 @@ const CartScreen = ({navigation, route}: any) => {
 };
 
 const styles = StyleSheet.create({
-  ScreenContainer: {
+  screenContainer: {
     flex: 1,
     backgroundColor: COLORS.primaryBlackHex,
   },
-  ScrollViewFlex: {
+  scrollViewFlex: {
     flexGrow: 1,
   },
-  ScrollViewInnerView: {
+  scrollViewInnerView: {
     flex: 1,
     justifyContent: 'space-between',
   },
-  ItemContainer: {
+  itemContainer: {
     flex: 1,
-  },
-  ListItemContainer: {
     paddingHorizontal: SPACING.space_20,
-    gap: SPACING.space_20,
+  },
+  listItemContainer: {
+    paddingVertical: SPACING.space_20,
   },
 });
 
